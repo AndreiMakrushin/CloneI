@@ -1,4 +1,6 @@
 # Logs
+./supabase.js
+
 logs
 *.log
 npm-debug.log*

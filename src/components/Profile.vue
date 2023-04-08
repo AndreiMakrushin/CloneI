@@ -20,16 +20,29 @@
 <template>
     <Container>
         <div class="profile-container" v-for="people in user" :key="people.id">
-            <UserBar :people="people"/>
-            <ImageGallary :images="people.image"/>
+            <div class="card">
+                <UserBar :people="people"/>
+                <ImageGallary :images="people.image"/>
+            </div>
+            
         </div>
     </Container>
 </template>
 <style scoped>
     .profile-container{
         display: flex;
-        flex-direction: column;
+        display: inline-block;
         align-items: center;
         padding: 20px 0;
+    }
+    .card{
+        border-radius: 20px;
+        padding: 5px;
+        margin: 0 10px;
+        border: 2px solid mistyrose;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>

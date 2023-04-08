@@ -27,6 +27,7 @@ export const useUserStore = defineStore('users', () => {
     if(!validateEmail(email)){
       return errorMessage.value = "проверьте правильность заполнения электронной почты"
     }
+    errorMessage.value = ""
   }
 
   const handleLogout = () => {}

@@ -4,6 +4,7 @@ import Profile from '../components/Profile.vue';
 
 <template>
   <main>
-    <Profile />
+    <Suspense><Profile /></Suspense>
+    
   </main>
 </template>

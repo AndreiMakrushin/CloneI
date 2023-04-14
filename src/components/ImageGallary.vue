@@ -3,7 +3,11 @@
 </script>
 <template>
     <div class="image-gallary-container">
-        <img v-for="image in props" :key="image" :src="image" alt="">
+        <img 
+        v-for="image in props.images" 
+        :key="image" 
+        :src="`https://uixdljegstptfmxqclvx.supabase.co/storage/v1/object/public/images/${image.url}`"
+        >
     </div>
 </template>
 

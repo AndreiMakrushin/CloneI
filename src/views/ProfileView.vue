@@ -4,7 +4,7 @@ import Profile from '../components/Profile.vue';
 
 <template>
   <main>
-    <Suspense><Profile /></Suspense>
+    <Suspense><Profile :key="$route.params.username"/></Suspense>
     
   </main>
 </template>

@@ -1,8 +1,11 @@
 <script setup>
+  import {useRouter} from "vue-router"
   const {character} = defineProps(['character'])
+
+  const router = useRouter()
 </script>
 <template>
-    <a-card hoverable style="width: 240px" class="card">
+    <a-card hoverable style="width: 240px" class="card" @click="router.push(`/profile/${character.name}`)">
       <template #cover>
         <img alt="example" :src="character.image" />
       </template>

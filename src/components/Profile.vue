@@ -1,48 +1,84 @@
 <script setup>
-    import axios from "axios"
-    import {ref} from "vue"
-    import { useRoute } from 'vue-router';
-    import Container from './Container.vue'
-    import UserBar from "./UserBar.vue"
-    import ImageGallary from './ImageGallary.vue'
-    const route = useRoute()
-    
-    const characters = ref(null)
-    const response = await axios.get(`https://rickandmortyapi.com/api/character`);
-    characters.value = response.data.results
+import Container from './Container.vue';
+import UserBar from "./UserBar.vue"
+import ImageGallary from './ImageGallary.vue';
+import {ref, onMounted} from "vue"
+import {useRoute} from "vue-router"
+import {supabase} from "../supabase"
 
-    
-    const userName = route.params.username
-    const user = characters.value.filter(user => user.name.toLowerCase().includes(userName.toLowerCase()))
- 
-    
+const route = useRoute()
+const user = ref(null)
+const {username} = route.params
+const posts = ref([])
+const loading = ref(false)
+
+const addNewPost = (post) => {
+    posts.value.unshift(post)
+}
+
+const fetchData = async () => {
+    loading.value = true
+    const {data: userData} = await supabase
+    .from("users")
+    .select()
+    .eq('username', username)
+    .single();
+
+    if(!userData){
+        loading.value = false
+        return user.value = null
+    }
+
+    user.value = userData
+
+    const {data: postsData} = await supabase
+    .from("posts")
+    .select()
+    .eq("owner_id", user.value.id )
+
+    posts.value = postsData;
+
+    loading.value = false
+
+}
+
+onMounted(() => {
+    fetchData()
+})
+
+const and = ref({
+    name: "Andrei"
+})
 </script>
+
 <template>
     <Container>
-        <div class="profile-container" v-for="people in user" :key="people.id">
-            <div class="card">
-                <UserBar :people="people"/>
-                <ImageGallary :images="people.image"/>
-            </div>
-            
+        <div class="profile-container" v-if="!loading">
+            <UserBar
+                :key="$route.params.username"
+                :people="username"
+                :images="posts"
+                :addNewPost="addNewPost"
+            />
+            <ImageGallary :images="posts"/>
+        </div>
+        <div v-else class="spinner">
+            <ASpin />
         </div>
     </Container>
 </template>
+
 <style scoped>
-    .profile-container{
-        display: flex;
-        display: inline-block;
-        align-items: center;
-        padding: 20px 0;
-    }
-    .card{
-        border-radius: 20px;
-        padding: 5px;
-        margin: 0 10px;
-        border: 2px solid mistyrose;
-        max-width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 85vh
+}
 </style>
